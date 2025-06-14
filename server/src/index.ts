@@ -2,6 +2,8 @@ import { Hono } from 'hono'
 import userRoutes from './routes/user';
 import blogRoutes from './routes/blog';
 import { cors } from 'hono/cors'
+import { auth } from '../lib/auth';
+
 
 const app = new Hono<{
   Bindings: {
@@ -9,6 +11,8 @@ const app = new Hono<{
     JWT_SECRET: string;
   }
 }>();
+
+app.on(["POST", "GET"], "/api/auth/**", (c) => auth.handler(c.req.raw));
 
 app.use('/*', cors())
 
